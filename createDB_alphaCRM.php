@@ -13,31 +13,47 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password);
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pas";
+
+
+$conn = pg_connect("$host $port $creds");
 
 // Check connection
-if ($conn->connect_error) {
-    die("<br>  Connection failed: " . $conn->connect_error);
+if ( pg_connection_status($conn) ) {
+    die("<br>  Connection failed: " . pg_last_error($conn) );
 } 
 echo "<br>  Connected successfully";
 
+}
+
+
+$databaseName = "alphaCRM";
+
+
 // Create database
-$sql = "CREATE DATABASE alphaCRM";
-if ($conn->query($sql) === TRUE) {
+
+$sql = "CREATE DATABASE $databaseName ;";
+
+
+if (pg_query($conn , $sql) === TRUE) {
     echo "<br> Database alphaCRM created successfully";
 } else {
-    echo "<br> Error creating database: " . $conn->error;
+    echo "<br> Error creating database $databaseName . <br>".pg_last_error($conn) ;
 }
 
 
 
 
-$conn->close();
 
-
+pg_close($conn);
 ?>
+
+
+
+
+
+ 

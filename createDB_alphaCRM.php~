@@ -1,3 +1,17 @@
+<script>
+/*
+
+*	File:			createDB_alphaCRM.php
+*	By:			Roy Canseco
+*	Date:			26 Sep 2018	
+*
+*	This script creates the database for AlphaCRM
+*
+*=====================================
+*/
+</script>
+
+
 <?php
 
 {	// Create connection
@@ -16,12 +30,13 @@ echo "<br>  Connected successfully";
 
 }
 
+
 $databaseName = "alphaCRM";
 
 
 // Create database
 
-$sql = "CREATE DATABASE $databaseName ;";
+$sql = "CREATE DATABASE alphaCRM;";
 
 
 if (pg_query($conn , $sql) === TRUE) {
@@ -36,3 +51,9 @@ if (pg_query($conn , $sql) === TRUE) {
 
 pg_close($conn);
 ?>
+
+
+
+
+
+ 

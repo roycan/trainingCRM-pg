@@ -1,0 +1,674 @@
+<?xml version="1.0"?>
+<snippets>
+  <branch title="ROY Snippets">
+    <leaf type="insert" title="New php Script File" tooltip="">
+      <before>&lt;?php
+/*
+
+*	File:		%0
+*	By:			Roy Canseco
+*	Date:		%1
+*
+*	This script </before>
+      <after>*
+*
+*
+*=====================================
+*/
+
+
+
+
+
+?&gt;</after>
+      <param name="file name"/>
+      <param name="date"/>
+    </leaf>
+    <leaf type="insert" title="New js Script File" tooltip="header comment&#10;&#10;use // for single line comments">
+      <before>&lt;script&gt;
+/*
+
+*	File:			%0
+*	By:			Roy Canseco
+*	Date:			%1	
+*
+*	This script</before>
+      <after>*
+*
+*=====================================
+*/
+&lt;/script&gt;
+</after>
+      <param name="file name"/>
+      <param name="date"/>
+    </leaf>
+    <branch title="js print">
+      <leaf type="insert" title="js innerHTML" tooltip="Writing into an HTML element, using innerHTML.">
+        <before>&lt;p id="demo"&gt;&lt;/p&gt;
+</before>
+        <after>
+&lt;script&gt;
+document.getElementById("demo").innerHTML = 5 + 6;
+&lt;/script&gt;</after>
+      </leaf>
+      <leaf type="insert" title="js document.write" tooltip="this will delete all existing loaded html">
+        <before/>
+        <after>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+
+&lt;h1&gt;My First Web Page&lt;/h1&gt;
+&lt;p&gt;My first paragraph.&lt;/p&gt;
+
+&lt;button type="button" onclick="document.write(5 + 6)"&gt;Try it&lt;/button&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</after>
+      </leaf>
+      <leaf type="insert" title="js window.alert" tooltip="creates a pop-up">
+        <before/>
+        <after>&lt;script&gt;
+window.alert(5 + 6);
+
+// window.confirm(5+6);
+&lt;/script&gt;
+
+
+</after>
+      </leaf>
+      <leaf type="insert" title="js console.log" tooltip="this prints to the browser console.">
+        <before/>
+        <after>&lt;script&gt;
+console.log(5 + 6);
+&lt;/script&gt;</after>
+      </leaf>
+      <leaf type="insert" title="js escape char" tooltip="/ - backslash">
+        <before/>
+        <after>var x = "We are the so-called \"Vikings\" from the north.";
+
+var x = "We are the so-called \'Vikings\' from the north.";
+
+var x = "We are the so-called \\Vikings\\ from the north.";</after>
+      </leaf>
+    </branch>
+    <branch title="mysql">
+      <leaf type="insert" title="mysql_connect" tooltip="">
+        <before>&lt;?php
+{  //  connect to database 
+
+		
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$databaseName = "alphaCRM";
+		
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $databaseName);
+		
+		// Check connection
+		if ($conn-&gt;connect_error) {
+		    die("&lt;br&gt; Connection failed: " . $conn-&gt;connect_error);
+		} 
+		echo "&lt;br&gt; Connected successfully";
+		
+
+}</before>
+        <after>
+
+
+
+
+$conn-&gt;close();
+?&gt;</after>
+        <param name="database name"/>
+      </leaf>
+      <leaf type="insert" title="create_db" tooltip="creates a new database">
+        <before>&lt;?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password);
+
+// Check connection
+if ($conn-&gt;connect_error) {
+    die("&lt;br&gt;  Connection failed: " . $conn-&gt;connect_error);
+} 
+echo "&lt;br&gt;  Connected successfully";
+</before>
+        <after>
+// Create database
+$sql = "CREATE DATABASE %0";
+if ($conn-&gt;query($sql) === TRUE) {
+    echo "&lt;br&gt; Database %0 created successfully";
+} else {
+    echo "&lt;br&gt; Error creating database: " . $conn-&gt;error;
+}
+
+
+
+
+$conn-&gt;close();
+
+
+?&gt;</after>
+        <param name="database name"/>
+      </leaf>
+      <leaf type="insert" title="create_table" tooltip="create mysql table">
+        <before>// sql to create table
+$sql = "CREATE TABLE %0 (
+	id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+	firstname VARCHAR(30) NOT NULL,
+	lastname VARCHAR(30) NOT NULL,
+	email VARCHAR(50),
+	reg_date TIMESTAMP
+)";
+</before>
+        <after>
+if ($conn-&gt;query($sql) === TRUE) {
+    echo "&lt;br&gt; Table %0 created successfully";
+} else {
+    echo "&lt;br&gt; Error creating table: " . $conn-&gt;error;
+}
+
+
+/*
+CREATE TABLE &lt;databaseName&gt;.&lt;tableName&gt;(
+&lt;fieldName&gt; type (len) {NOT} NULL {AUTO_INCREMENT} PRIMARY KEY,
+&lt;fieldName&gt; type (len) {NOT} NULL ,
+&lt;fieldName&gt; type (len) {NOT} NULL ,
+...
+&lt;fieldName&gt; type (len) {NOT} NULL 
+)
+
+
+// {xxx} means xxx is optional
+*/
+
+</after>
+        <param name="table name"/>
+      </leaf>
+      <leaf type="insert" title="drop_table" tooltip="delete a mysql table">
+        <before>// sql to drop a table
+$sql = "DROP TABLE %0;";</before>
+        <after>if ($conn-&gt;query($sql) === TRUE) {
+    echo "&lt;br&gt; Table %0 dropped successfully";
+} else {
+    echo "&lt;br&gt; Error dropping  table: " . $conn-&gt;error;
+}
+</after>
+        <param name="table name"/>
+      </leaf>
+      <leaf type="insert" title="drop_db" tooltip="drops an entire mysql database&#10;">
+        <before>
+&lt;?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password);
+
+// Check connection
+if ($conn-&gt;connect_error) {
+    die("&lt;br&gt; Connection failed: " . $conn-&gt;connect_error);
+} 
+echo "&lt;br&gt; Connected successfully";
+
+</before>
+        <after>
+	
+// sql to drop a database
+$sql = "DROP DATABASE %0;";
+
+if ($conn-&gt;query($sql) === TRUE) {
+    echo "&lt;br&gt; Database %0 dropped successfully";
+} else {
+    echo "&lt;br&gt; Error dropping table: " . $conn-&gt;error;
+}
+
+
+
+$conn-&gt;close();
+
+
+
+?&gt;</after>
+        <param name="database name"/>
+      </leaf>
+      <leaf type="insert" title="insert into table" tooltip="this inserts values into corresponding fields of a mySQL table">
+        <before>// sql insert into table
+// you can get an exact template for this from phpmyadmin
+$sql = "INSERT INTO %0 (id, Name) 
+			VALUES (NULL,  'Roy'),
+				(NULL,  'Canseco') ,
+				(NULL,  '') 
+				;";
+</before>
+        <after>
+if ($conn-&gt;query($sql) === TRUE) {
+    echo "&lt;br&gt; Data for Table %0 inserted successfully";
+} else {
+    echo "&lt;br&gt; Error inserting to table: " . $conn-&gt;error;
+}
+
+</after>
+        <param name="table name"/>
+      </leaf>
+      <leaf type="insert" title="update records" tooltip="updates row(s) in a mysql table">
+        <before>$sql = "UPDATE %0 SET name='Roy Co.' WHERE id=2";
+
+if ($conn-&gt;query($sql) === TRUE) {
+    echo "&lt;br&gt; Record in table %0 updated successfully";
+} else {
+    echo "&lt;br&gt; Error updating record: " . $conn-&gt;error;
+}
+
+</before>
+        <after>/*
+UPDATE &lt;tableName&gt; SET
+	fieldA = 'valueA' ,
+	fieldB = 'valueB' ,
+	fieldC = 'valueC' 
+WHERE 
+	fieldX &lt;operator&gt; 'valueX'
+	
+	
+// operator can  = or &lt; or &gt;	
+*/
+</after>
+        <param name="table name"/>
+      </leaf>
+      <leaf type="insert" title="delete records" tooltip="deletes one or more records from a mysql database table">
+        <before>// sql to delete a record
+$sql = "DELETE FROM %0 WHERE id=29";
+</before>
+        <after>
+if ($conn-&gt;query($sql) === TRUE) {
+    echo "&lt;br&gt;  Table %0 record(s) deleted successfully";
+} else {
+    echo "&lt;br&gt; Error deleting record: " . $conn-&gt;error;
+}
+
+
+</after>
+        <param name="table name"/>
+      </leaf>
+      <leaf type="insert" title="select records" tooltip="selects data from a mysql table . using a bootstrap 4 table class.">
+        <before>
+$sql = "SELECT id, firstname, lastname FROM %0";
+$result = $conn-&gt;query($sql);
+
+
+if ($result-&gt;num_rows &gt; 0) {
+    echo "&lt;table class="Table"&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;/tr&gt;";
+    // output data of each row
+    while($row = $result-&gt;fetch_assoc()) {
+        echo "&lt;tr&gt;&lt;td&gt;".$row["id"]."&lt;/td&gt;&lt;td&gt;".$row["firstname"]." ".$row["lastname"]."&lt;/td&gt;&lt;/tr&gt;";
+    }
+    echo "&lt;/table&gt;";
+} else {
+    echo "0 results";
+}
+
+
+</before>
+        <after>/*
+$sql = "SELECT * FROM Orders LIMIT 30";
+$sql = "SELECT * FROM Orders LIMIT 10 OFFSET 15";
+
+// WHERE tCompany.ID IS NULL
+// WHERE tCompany.ID = 1 OR 
+	WHERE tCompany.NAME = "Pie Company"
+// ORDER BY LastName ASC , FirstName ASC
+*/</after>
+        <param name="table name"/>
+      </leaf>
+    </branch>
+    <branch title="js loops">
+      <leaf type="insert" title="while loop" tooltip="javascript while loop with examples">
+        <before/>
+        <after>&lt;script&gt;
+
+var i =0;
+var text = "";
+
+while (i &lt; 10) {
+    text += "\n The number is " + i;
+    i++;
+}
+
+alert(text);
+
+
+/*
+while (condition) {
+    code block to be executed
+}
+*/
+
+
+
+/*
+var cars = ["BMW", "Volvo", "Saab", "Ford"];
+var i = 0;
+var text = "";
+
+while (cars[i]) {
+    text += cars[i] + "\n";
+    i++;
+}
+
+
+alert(text)
+*/
+
+&lt;/script&gt;</after>
+      </leaf>
+      <leaf type="insert" title="do/while loop" tooltip="">
+        <before/>
+        <after>
+&lt;script&gt;
+
+var text = "";
+var i =0;
+
+do {
+	
+    text += "\n The number is " + i;
+    i++;
+}
+while (i &lt; 10);
+
+
+window.alert(text);
+
+
+/*
+do {
+    code block to be executed
+}
+while (condition);
+*/
+&lt;/script&gt;
+</after>
+      </leaf>
+      <leaf type="insert" title="for loop" tooltip="javascript for loop &#10;">
+        <before>&lt;script&gt;
+
+text = "";
+
+for (var i = 0; i &lt; 5; i++) {
+    text += "The number is " + i + "\n";
+}
+</before>
+        <after>
+alert(text);
+
+/*
+for (statement 1; statement 2; statement 3) {
+    code block to be executed
+}
+*/
+
+
+&lt;/script&gt;
+</after>
+      </leaf>
+      <leaf type="insert" title="for/in loop" tooltip="javascript version of php's foreach loop">
+        <before>&lt;script&gt;
+
+var person = {fname:"John", lname:"Doe", age:25}; 
+
+var text = "";
+var x;
+for (x in person) {
+    text += person[x];
+}</before>
+        <after>
+alert(text);
+
+&lt;/script&gt;
+</after>
+      </leaf>
+    </branch>
+    <branch title="html">
+      <leaf type="insert" title="js table" tooltip="html table creation with javascript iteration">
+        <before>&lt;div class="container"&gt;
+  &lt;h2&gt;Table &lt;/h2&gt;  
+
+&lt;table class="table" id="myTable"&gt; 
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Salutation&lt;/th&gt;
+      &lt;th scope="col"&gt;FirstName&lt;/th&gt;
+      &lt;th scope="col"&gt;LastName&lt;/th&gt;
+      &lt;th scope="col"&gt;Company&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+
+&lt;/table&gt;
+
+&lt;/div&gt;</before>
+        <after>
+&lt;script type="text/javascript" &gt;
+
+	for (var i=0 ; i&lt;5 ; i++){
+		var table = document.getElementById("myTable");
+		var row = table.insertRow(1);
+		var cell0 = row.insertCell(0);
+		var cell1 = row.insertCell(1);
+		var cell2 = row.insertCell(2);
+		var cell3 = row.insertCell(3);
+
+		cell0.innerHTML = "salutation";
+		cell1.innerHTML = "my given name";
+		cell2.innerHTML = "my surname";
+		cell3.innerHTML = "my company";
+
+	}
+	
+&lt;/script&gt;
+</after>
+      </leaf>
+      <leaf type="insert" title="boostrap form" tooltip="html form from bootstrap 4">
+        <before>&lt;div class="container"&gt;
+
+&lt;h2&gt; %0 &lt;/h2&gt;  </before>
+        <after>
+&lt;form action="/action_page.php" name="%0" method="post"&gt;
+	&lt;div class="form-group"&gt;
+    &lt;label for="name"&gt;User name:&lt;/label&gt;
+    &lt;input type="text" class="form-control" id="name" name="name" value="" required&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label for="email"&gt;Email address:&lt;/label&gt;
+    &lt;input type="email" class="form-control" id="email"
+    	input type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" &gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label for="pwd"&gt;Password:&lt;/label&gt;
+    &lt;input type="password" class="form-control" id="pwd" name="pwd" value=""&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group form-check"&gt;
+    &lt;label class="form-check-label"&gt;
+      &lt;input class="form-check-input" type="checkbox"&gt; Remember me
+    &lt;/label&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label for="Tel"&gt;Telephone:&lt;/label&gt;
+    &lt;input type="number" class="form-control" id="Tel" name="Tel" 
+    	data-bv-integer-message="Please enter a valid phone number." &gt;
+  &lt;/div&gt;	
+
+  &lt;button type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;/div&gt;</after>
+        <param name="form name"/>
+      </leaf>
+      <leaf type="insert" title="table" tooltip="">
+        <before>&lt;div class="container table-responsive"&gt;
+  &lt;h2&gt;Table &lt;/h2&gt;  
+</before>
+        <after>
+&lt;table class="table table-striped table-hover table-bordered "&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;#&lt;/th&gt;
+      &lt;th scope="col"&gt;First&lt;/th&gt;
+      &lt;th scope="col"&gt;Last&lt;/th&gt;
+      &lt;th scope="col"&gt;Handle&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;1&lt;/th&gt;
+      &lt;td&gt;Mark&lt;/td&gt;
+      &lt;td&gt;Otto&lt;/td&gt;
+      &lt;td&gt;@mdo&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;2&lt;/th&gt;
+      &lt;td&gt;Jacob&lt;/td&gt;
+      &lt;td&gt;Thornton&lt;/td&gt;
+      &lt;td&gt;@fat&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;3&lt;/th&gt;
+      &lt;td&gt;Larry&lt;/td&gt;
+      &lt;td&gt;the Bird&lt;/td&gt;
+      &lt;td&gt;@twitter&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;/div&gt;</after>
+      </leaf>
+      <leaf type="insert" title="dropdown link" tooltip="bootstrap 4 dropdown button">
+        <before/>
+        <after>&lt;div class="dropdown"&gt;
+  &lt;button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"&gt;
+    Dropdown button
+  &lt;/button&gt;
+  &lt;div class="dropdown-menu"&gt;
+    &lt;a class="dropdown-item" href="#"&gt;Link 1&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#"&gt;Link 2&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#"&gt;Link 3&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</after>
+      </leaf>
+      <leaf type="insert" title="unordered list" tooltip="bootstrap 4  ul">
+        <before/>
+        <after>&lt;div class="container"&gt;
+  &lt;h2&gt;Basic List Group&lt;/h2&gt;
+  &lt;ul class="list-group"&gt;
+    &lt;li class="list-group-item"&gt;First item&lt;/li&gt;
+    &lt;li class="list-group-item"&gt;Second item&lt;/li&gt;
+    &lt;li class="list-group-item"&gt;Third item&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+</after>
+      </leaf>
+      <leaf type="insert" title="dropdown select" tooltip="this is a bootstrap dropdown to select an option in the form">
+        <before/>
+        <after>&lt;div class="form-group"&gt;
+  &lt;label for="sel1"&gt;Select list:&lt;/label&gt;
+  &lt;select class="form-control" id="sel1" name="sel1"&gt;
+    &lt;option&gt;1&lt;/option&gt;
+    &lt;option&gt;2&lt;/option&gt;
+    &lt;option&gt;3&lt;/option&gt;
+    &lt;option&gt;4&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</after>
+      </leaf>
+      <leaf type="insert" title="data table" tooltip="using jquery and bootstrap for search, pagination and sorting table functionality">
+        <before>&lt;script&gt;
+	$(document).ready(function() {
+	    $("#%0").DataTable();
+	} );
+&lt;/script&gt;
+</before>
+        <after>
+&lt;table id="%0" class="table table-striped table-hover" style="width:100%% "&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Name&lt;/th&gt;
+                &lt;th&gt;Position&lt;/th&gt;
+                &lt;th&gt;Office&lt;/th&gt;
+                &lt;th&gt;Age&lt;/th&gt;
+                &lt;th&gt;Start date&lt;/th&gt;
+                &lt;th&gt;Salary&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            &lt;tr&gt;
+                &lt;td&gt;Tiger Nixon&lt;/td&gt;
+                &lt;td&gt;System Architect&lt;/td&gt;
+                &lt;td&gt;Edinburgh&lt;/td&gt;
+                &lt;td&gt;61&lt;/td&gt;
+                &lt;td&gt;2011/04/25&lt;/td&gt;
+                &lt;td&gt;$320,800&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;Garrett Winters&lt;/td&gt;
+                &lt;td&gt;Accountant&lt;/td&gt;
+                &lt;td&gt;Tokyo&lt;/td&gt;
+                &lt;td&gt;63&lt;/td&gt;
+                &lt;td&gt;2011/07/25&lt;/td&gt;
+                &lt;td&gt;$170,750&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;Ashton Cox&lt;/td&gt;
+                &lt;td&gt;Junior Technical Author&lt;/td&gt;
+                &lt;td&gt;San Francisco&lt;/td&gt;
+                &lt;td&gt;66&lt;/td&gt;
+                &lt;td&gt;2009/01/12&lt;/td&gt;
+                &lt;td&gt;$86,000&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td&gt;Donna Snider&lt;/td&gt;
+                &lt;td&gt;Customer Support&lt;/td&gt;
+                &lt;td&gt;New York&lt;/td&gt;
+                &lt;td&gt;27&lt;/td&gt;
+                &lt;td&gt;2011/01/25&lt;/td&gt;
+                &lt;td&gt;$112,000&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/tbody&gt;
+        &lt;tfoot&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Name&lt;/th&gt;
+                &lt;th&gt;Position&lt;/th&gt;
+                &lt;th&gt;Office&lt;/th&gt;
+                &lt;th&gt;Age&lt;/th&gt;
+                &lt;th&gt;Start date&lt;/th&gt;
+                &lt;th&gt;Salary&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/tfoot&gt;
+    &lt;/table&gt;</after>
+        <param name="table id"/>
+      </leaf>
+    </branch>
+    <leaf type="insert" title="csv read" tooltip="uses php to read a csv file and place it in an array">
+      <before>//		read CSV data file
+		$CSVfilename = "csvSalutations";	
+		
+			$file = fopen($CSVfilename, "r"); 		
+			$i = 0;
+			while(!feof($file))
+			  {		  	
+				$thisLine = fgets($file);		
+				$tableData[$i] = explode(",", $thisLine);
+				$i++; 
+			  }
+			fclose($file);</before>
+      <after>			
+			$numRows = sizeof($tableData);
+		}
+		echo '$numRows : '.$numRows.'&lt;br /&gt;';
+		echo '$tableField[$numFields-1] : '.$tableField[$numFields-1].'&lt;br /&gt;';
+</after>
+      <param name="CSV filename"/>
+    </leaf>
+  </branch>
+</snippets>

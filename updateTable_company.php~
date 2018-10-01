@@ -49,6 +49,17 @@ WHERE
 */
 
 
+// sql to delete a record
+$sql = "DELETE FROM companyTable WHERE id=29";
+
+if ($conn->query($sql) === TRUE) {
+    echo "<br>  Table companyTable record(s) deleted successfully";
+} else {
+    echo "<br> Error deleting record: " . $conn->error;
+}
+
+
+
 
 
 

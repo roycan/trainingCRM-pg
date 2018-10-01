@@ -1,0 +1,23 @@
+<?php
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $dbname      = "dbname=alphaCRM";
+   $creds = "user=postgres password=pass";
+
+$db = pg_connect("$host $port $dbname $creds");
+   if(!$db) {
+      echo "Error : Unable to open database\n";
+   } else {
+      echo "Opened database successfully\n";
+      $result1 = pg_query($db, "CREATE DATABASE alphaCRM"); 
+      if (!$result1)
+			{
+				echo "Update failed!!";
+			} else
+			{
+				echo "Update successful;";
+ 		  }
+ 		  
+ 	}
+?>
+ 
