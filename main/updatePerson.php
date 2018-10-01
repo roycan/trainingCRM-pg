@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script>
+/*
+
+*	File:			updatePerson.php
+*	By:			Roy Canseco
+*	Date:			28 Sep 2018	
+*
+*	This script saves the data from editPerson.php 
+		to the tPerson table of alphaCRM
+*
+*=====================================
+*/
+</script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$databaseName = "alphaCRM";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $databaseName);
+
+// Check connection
+if ($conn->connect_error) {
+    die("<br> Connection failed: " . $conn->connect_error);
+} 
+echo "<br> Connected successfully";
+
+
+
+////////////////////////////////
+
+// update person's details
+
+	$ID = $_POST["ID"];	
+	$Salutation = $_POST["Salutation"];
+	$FirstName = $_POST["FirstName"];
+	$LastName = $_POST["LastName"];
+	$Tel = $_POST["Tel"];
+	$CompanyID = $_POST["CompanyID"];
+	$email = $_POST["email"];
+
+
+$sql = "UPDATE tPerson SET 
+
+			Salutation='$Salutation' ,
+			FirstName='$FirstName' ,
+			LastName='$LastName' ,
+			Tel='$Tel' ,
+			CompanyID='$CompanyID',
+			email='$email'
+	
+		WHERE id=$ID;";
+		
+
+if ($conn->query($sql) === TRUE) {
+    echo "<br> Record in table tPerson updated successfully";
+} else {
+    echo "<br> Error updating record: " . $conn->error;
+}
+
+/*
+UPDATE <tableName> SET
+	fieldA = 'valueA' ,
+	fieldB = 'valueB' ,
+	fieldC = 'valueC' 
+WHERE 
+	fieldX <operator> 'valueX'
+	
+	
+// operator can  = or < or >	
+*/
+
+
+
+
+echo '<br>'.$sql;
+
+
+$conn->close();
+
+
+
+?>
+
+
+
+<br><hr><br>
+
+<a href="selectCompany.php">View another Company</a>
+<br>
+<a href="index.php"> Quit to index page</a>
+
+
+</body>
+</html>

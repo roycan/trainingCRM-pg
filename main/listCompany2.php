@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script>
+/*
+
+*	File:			listCompany2.php
+*	By:			Roy Canseco
+*	Date:			29 Sep 2018
+*
+*	This script list company details in a data table.
+*
+*=====================================
+*/
+
+</script>
+
+<title> listCompany.php </title>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+	<script>
+		$(document).ready(function() {
+		    $('#companyTable').DataTable();
+		} );
+	</script>
+
+
+</head>
+
+<body>
+
+
+
+
+<div class="container">
+
+
+
+<?php
+
+{	// connection script
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$databaseName = "alphaCRM";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $databaseName);
+
+// Check connection
+if ($conn->connect_error) {
+    die("<br> Connection failed: " . $conn->connect_error);
+} 
+// echo "<br> Connected successfully";
+
+}		
+/////////////////////////////////////////////////////////////////
+
+
+
+{ //create data table from DB results
+
+$sql = "SELECT * FROM tCompany
+			ORDER BY Name";
+$result = $conn->query($sql);
+
+
+
+
+if ($result->num_rows > 0) {
+
+	
+	
+		echo'
+		<table id="companyTable" class="table table-striped table-bordered" style="width:100%">
+	        <thead>
+	            <tr>
+	            	<th>ID (edit)</th>
+	                <th>preName</th>
+	                <th>Name</th>
+	                <th>RegType	</th>
+	                <th>StreetA</th>
+	                <th>StreetB date</th>
+	                <th>StreetC</th>
+	                <th>City	</th>
+	                <th>Region</th>
+	                <th>Postcode date</th>
+	                <th>Country</th>
+	                <th>People</th>
+	            
+	            </tr>
+	        </thead>
+	        <tbody>
+		';        
+	        
+	     
+	    {	// output data of each row
+	    $i = 1;
+	    while($row = $result->fetch_assoc()) {
+	        echo '	
+	  				<tr>
+	        			<td> <a href="editCompanyForm.php?ID='.$row["ID"].'" >'.$i.'</a></td>
+	               <td>'.$row["preName"].'</td>
+	               <td>'.$row["Name"].'</td>
+	               <td>'.$row["RegType"].'</td>
+	               <td>'.$row["StreetA"].'</td>
+	               <td>'.$row["StreetB"].'</td>
+	               <td>'.$row["StreetC"].'</td>
+	               <td>'.$row["City"].'</td>
+	               <td>'.$row["Region"].'</td>
+	               <td>'.$row["Postcode"].'</td>
+	               <td>'.$row["Country"].'</td>
+	               <td><a href="listPeople.php?ID='.$row["ID"].'" > link </a> </td>
+	            </tr>
+	        ';
+	        	  
+	        	  
+				$i++;	    
+	    }        
+	
+		}  
+	   
+	 	echo'       
+	        </tbody>
+	        <tfoot>
+	            <tr>   
+	            	<th>ID (edit)</th>
+	                <th>preName</th>
+	                <th>Name</th>
+	                <th>RegType	</th>
+	                <th>StreetA</th>
+	                <th>StreetB </th>
+	                <th>StreetC</th>
+	                <th>City	</th>
+	                <th>Region</th>
+	                <th>Postcode date</th>
+	                <th>Country</th>
+	                <th>People</th>
+	            </tr>
+	        </tfoot>
+	    </table>
+
+		';
+
+
+    
+} else {
+    echo "0 results";
+}
+
+
+
+}
+
+
+
+$conn->close();
+?>
+
+	
+	
+</div>
+
+
+
+
+
+
+
+<br><hr><br>
+
+
+<a href="index.php"> Quit to index page</a>
+
+
+</body>
+</html>
