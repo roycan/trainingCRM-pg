@@ -34,26 +34,35 @@
 
 <body>
 
+
+
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
+
 
 
 
 ////////////////////////////////
 
-// update person's details
+{ 	// update person's details
 
 	$ID = $_POST["ID"];	
 	$Salutation = $_POST["Salutation"];
@@ -64,7 +73,7 @@ echo "<br> Connected successfully";
 	$email = $_POST["email"];
 
 
-$sql = "UPDATE tPerson SET 
+	$sql = "UPDATE tPerson SET 
 
 			Salutation='$Salutation' ,
 			FirstName='$FirstName' ,
@@ -76,11 +85,11 @@ $sql = "UPDATE tPerson SET
 		WHERE id=$ID;";
 		
 
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Record in table tPerson updated successfully";
-} else {
-    echo "<br> Error updating record: " . $conn->error;
-}
+	if (pg_query($conn, $sql) == TRUE) {
+	    echo "<br> Record in table tPerson updated successfully";
+	} else {
+	    echo "<br> Error updating record: " . pg_last_error($conn);
+	}
 
 /*
 UPDATE <tableName> SET
@@ -94,13 +103,14 @@ WHERE
 // operator can  = or < or >	
 */
 
+}
 
 
 
 echo '<br>'.$sql;
 
 
-$conn->close();
+pg_close($conn);
 
 
 

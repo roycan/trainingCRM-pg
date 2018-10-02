@@ -3,9 +3,9 @@
 
 *	File:			tCompanyInitialise.php
 *	By:			TMIT , Roy Canseco
-*	Date:			26 Sep 2018
+*	Date:			02 Oct 2018
 *
-*	This script initialises the tCompany TABLE
+*	This script initializes the t_companies TABLE
 *
 *
 *=====================================
@@ -13,27 +13,31 @@
 
 
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
 
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
 
 
 
 
- {
+
+{	// initialize table from csv values
 
 	
 	{	//		Table Definition 
@@ -52,32 +56,18 @@ echo "<br> Connected successfully";
 					'Postcode',			
 					'COUNTRY'				
 		);
+		
 		$numFields = sizeof($tableField);
 		
-		echo '$numFields : '.$numFields.'<br />';
+		echo '<br> $numFields : '.$numFields.'<br />';
 
-		$createTable_SQL = "
-					CREATE TABLE alphacrm.".$tableName." (
-					ID INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-					preName VARCHAR( 50 ) ,
-					Name VARCHAR( 250 ) NOT NULL,
-					RegType VARCHAR( 50 )  NULL,
-					
-					StreetA VARCHAR( 150 )  NULL,
-					StreetB VARCHAR( 150 )  NULL,
-					StreetC VARCHAR( 150 )  NULL,
-					City VARCHAR( 150 )  NULL,
-					Region VARCHAR( 150 )  NULL,
-					Postcode VARCHAR( 50 )  NULL,
-					
-					COUNTRY VARCHAR( 250 ) NOT NULL
-		)";
+
 	}
 	
-	//	=======^^^^^^^^^^^^^^^^^^^^^^^=========  End of Definition Part ======^^^^^^^^^=====
+	//	=======^^^^^^^^^^^^^^^^^^^^^^^=============^^^^^^^^^=====
 
 										
-		{  //		read CSV data file
+	{  //		read CSV data file
 	
 			$file = fopen($CSVfilename, "r"); 		
 			$i = 0;
@@ -90,39 +80,64 @@ echo "<br> Connected successfully";
 			fclose($file);
 			
 			$numRows = sizeof($tableData);
-		}
+	}
+		
+		
 		echo '$numRows : '.$numRows.'<br />';
 		echo '$tableField[$numFields-1] : '.$tableField[$numFields-1].'<br />';
+		
 
-		{	//		DROP table		
-	
+	{	//		DROP table			
 		
 			$drop_SQL = "DROP TABLE ".$tableName;
 			
-			if (mysqli_query($conn, $drop_SQL))  {	
+			if (pg_query($conn, $drop_SQL))  {	
 				echo "'DROP ".$tableName."' -  Successful.";
 			} else {
 				echo "'DROP ".$tableName."' - Failed.";
 			}
-		}
+	}
 		
 		echo "<br /><hr /><br />";
+		
 	
-		{	//		CREATE table		
+	{	//		CREATE table	
+	
+			$createTable_SQL = "
+					CREATE TABLE ".$tableName." (
+					id SERIAL NOT NULL  PRIMARY KEY ,
+					prename VARCHAR( 50 ) ,
+					name VARCHAR( 250 ) NOT NULL,
+					regtype VARCHAR( 50 )  NULL,		
+					streeta VARCHAR( 150 )  NULL,
+					streetb VARCHAR( 150 )  NULL,
+					streetc VARCHAR( 150 )  NULL,
+					city VARCHAR( 150 )  NULL,
+					region VARCHAR( 150 )  NULL,
+					postcode VARCHAR( 50 )  NULL,				
+					country VARCHAR( 250 ) NOT NULL
+		)";	
+	
 			
-			if (mysqli_query($conn, $createTable_SQL))  {	
+			if (pg_query($conn, $createTable_SQL) )  {	
 				echo "'CREATE ".$tableName."' -  Successful.";
 			} else {
 				echo "'CREATE ".$tableName."' - Failed.";
 			}
-		}		
+	}		
+	
 		echo "<br /><hr /><br />";
+		
+		
+	{	// INSERT data to table	
 			
 			$table_SQLinsert = "INSERT INTO ".$tableName." (";
 			
 			//$table_SQLinsert .=   "x"; 
 			foreach($tableField as $tableFieldName) {
+
 				$table_SQLinsert .=  $tableFieldName;
+				
 				if($tableFieldName <> $tableField[$numFields-1]) {
 					$table_SQLinsert .=  ", ";
 				}
@@ -143,6 +158,7 @@ echo "<br> Connected successfully";
 				}
 
 				$table_SQLinsert .=  ") ";
+				
 				if ($indx < ($numRows - 1)) {
 					$table_SQLinsert .=  ",\n";
 				}
@@ -150,24 +166,23 @@ echo "<br> Connected successfully";
 				$indx++;
 			}
 		
-			{	//	Echo and Execute the SQL and test for success   
+	}
+		
+		{	//	Echo and Execute the SQL and test for success   
 			
 						echo "<strong><u>SQL:<br /></u></strong>";
 						echo $table_SQLinsert."<br /><br />";
 							
-						if (mysqli_query($conn, $table_SQLinsert))  {				
+						if (pg_query($conn, $table_SQLinsert))  {				
 							echo "was SUCCESSFUL.<br /><br />";
 						} else {
 							echo "FAILED.<br /><br />";		
 						}
-			}
+		}
 }
 
 
 
 
-$conn->close();
-
-
-
+pg_close($conn);
 ?>

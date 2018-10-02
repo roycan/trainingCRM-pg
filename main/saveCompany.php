@@ -37,23 +37,29 @@
 
 
 
-
-
-
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
+
+
+
 
 
 { //collect data with $_POST
@@ -70,7 +76,7 @@ echo "<br> Connected successfully";
 	$country = $_POST["country"];
 
 
-echo "INSERT INTO `tcompany` ( `preName`, `Name`, `RegType`, `StreetA`, 
+	echo "INSERT INTO `tcompany` ( `preName`, `Name`, `RegType`, `StreetA`, 
 			`StreetB`, `StreetC`, `City`, `Region`, `Postcode`, `COUNTRY`) 
 		VALUES ( '".$preName."', '".$companyName."', '".$regType."', '".$streetA.
 			"', '".$streetB."', '".$streetC."', '".$city."', '".$region."', '".
@@ -83,30 +89,26 @@ echo "INSERT INTO `tcompany` ( `preName`, `Name`, `RegType`, `StreetA`,
 
 
 {// sql insert into table
-// you can get an exact template for this from phpmyadmin
-$sql = "INSERT INTO `tcompany` ( `preName`, `Name`, `RegType`, `StreetA`, 
-			`StreetB`, `StreetC`, `City`, `Region`, `Postcode`, `COUNTRY`) 
-		VALUES ( '".$preName."', '".$companyName."', '".$regType."', '".$streetA.
-			"', '".$streetB."', '".$streetC."', '".$city."', '".$region."', '".
-			$postalCode."', '".$country."');";
+		$sql = "INSERT INTO tcompany ( prename, name, regtype, streeta, 
+					streetb, streetc, city, region, postcode, country) 
+				VALUES ( '".$preName."', '".$companyName."', '".$regType."', '".$streetA.
+					"', '".$streetB."', '".$streetC."', '".$city."', '".$region."', '".
+					$postalCode."', '".$country."');";
+		
+		if (pg_query($conn, $sql) == TRUE) {
+		    echo "<br> Data for Table tCompany inserted successfully";
+		} else {
+		    echo "<br> Error inserting to table: " . pg_last_error($conn);
+		}
 
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Data for Table tCompany inserted successfully";
-} else {
-    echo "<br> Error inserting to table: " . $conn->error;
 }
 
-}
 
 
 
-
-
-$conn->close();
-
-
-
+pg_close($conn);
 ?>
+
 
 <br><hr><br>
 

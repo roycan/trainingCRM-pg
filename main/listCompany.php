@@ -41,71 +41,73 @@
 	<div class="container">
 
 
-
 <?php
 
-{	// connection script
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-// echo "<br> Connected successfully";
-
-}		
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
-$sql = "SELECT ID, preName, Name FROM tCompany
-			ORDER BY Name";
-$result = $conn->query($sql);
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
 
 
 
 { //create table from DB results
 
-if ($result->num_rows > 0) {
+	
+	$sql = "SELECT ID, preName, Name FROM tCompany
+				ORDER BY Name";
+	$result = $conn->query($sql);
+	
+
+	
+	if ($result->num_rows > 0) {
+	
+		echo'
+			<div class="container">
+			  <h2>List of Companies</h2>
+			  <ul class="list-group">
+		';    
+	    
+	    
+	    // output data of each row
+	    $i = 1;
+	    while($row = $result->fetch_assoc()) {
+	        echo '<li class="list-group-item">'.$i.' <a href="listPeople.php?ID='.$row["ID"].'"
+	        	  >'.$row["preName"].' '.$row["Name"].'</a></li>';
+				$i++;	    
+	    }
+	    echo "
+		     </ul>
+			</div>   
+	   ";
+	    
+	
+	
+	
+	    
+	} else {
+	    echo "0 results";
+	}
+
 
 	echo'
-		<div class="container">
-		  <h2>List of Companies</h2>
-		  <ul class="list-group">
-	';    
-    
-    
-    // output data of each row
-    $i = 1;
-    while($row = $result->fetch_assoc()) {
-        echo '<li class="list-group-item">'.$i.' <a href="listPeople.php?ID='.$row["ID"].'"
-        	  >'.$row["preName"].' '.$row["Name"].'</a></li>';
-			$i++;	    
-    }
-    echo "
-	     </ul>
-		</div>   
-   ";
-    
-
-
-
-    
-} else {
-    echo "0 results";
-}
-
-
-echo'
-  </div>
-</div>
-
-';
+	  </div>
+	</div>
+	
+	';
 
 
 }

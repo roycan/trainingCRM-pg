@@ -46,68 +46,68 @@
 
 <?php
 
-{	// connection script
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-// echo "<br> Connected successfully";
-
-}		
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
-$sql = "SELECT ID, preName, Name FROM tCompany
-			ORDER BY Name";
-$result = $conn->query($sql);
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
 
 
 
 { //create dropdown from DB results
 
-if ($result->num_rows > 0) {
+	$sql = "SELECT ID, preName, Name FROM tCompany
+				ORDER BY Name";
+	$result = pg_query($conn, $sql);
 
-echo'
-<div class="dropdown">
-  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-    Select Company
-  </button>
-  <div class="dropdown-menu">
-';    
+
+	
+	if ($result) {
+		
+		echo'
+		<div class="dropdown">
+		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+		    Select Company
+		  </button>
+		  <div class="dropdown-menu">
+		';    
+	    
     
-    
-    // output data of each row
-    $i = 1;
-    while($row = $result->fetch_assoc()) {
-        echo '<a class="dropdown-item" href="editCompanyForm.php?ID='.$row["id"].'">'.$i.' '.$row["preName"].' '.$row["Name"].'</a>';
-			$i++;	    
-    }
-    echo "</table>";
-} else {
-    echo "0 results";
+	    // output data of each row
+	    $i = 1;
+	    while($row = pg_fetch_assoc($result)) {
+	        echo '<a class="dropdown-item" href="editCompanyForm.php?ID='.$row["id"].'">'.
+	        			$i.' '.$row["prename"].' '.$row["name"].'</a>';
+				$i++;	    
+	    }
+
+	} else {
+	    echo "0 results";
+	}
+
+	echo'
+	  </div>
+	</div>
+	';
+
 }
 
 
-echo'
-  </div>
-</div>
 
-';
-
-
-}
-
-
-
-$conn->close();
+pg_close($conn);
 ?>
 
 	

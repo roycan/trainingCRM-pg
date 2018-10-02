@@ -13,46 +13,39 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
 
-    
-$sql = "ALTER TABLE tPerson ADD Tel VARCHAR(50);  ";
-
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Table tPerson altered successfully";
-} else {
-    echo "<br> Error updating record: " . $conn->error;
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
 }
 
-/*
-UPDATE <tableName> SET
-	fieldA = 'valueA' ,
-	fieldB = 'valueB' ,
-	fieldC = 'valueC' 
-WHERE 
-	fieldX <operator> 'valueX'
+
+ 
+{	// alter table to add field
+	$sql = "ALTER TABLE tPerson ADD Tel VARCHAR(50);  ";
 	
-	
-// operator can  = or < or >	
-*/
+	if (pg_query($conn, $sql) == TRUE) {
+	    echo "<br> Table tPerson altered successfully";
+	} else {
+	    echo "<br> Error updating record: " . pg_last_error($conn);
+	}
+}
 
 
-$conn->close();
 
-
-
+pg_close($conn);
 ?>

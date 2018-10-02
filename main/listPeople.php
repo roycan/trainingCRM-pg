@@ -3,6 +3,8 @@
 
 <head>
 
+<title>listPeople.php</title>
+
 <script>
 /*
 
@@ -35,88 +37,100 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
 
-echo "<hr>";
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
+
+
 
 ////////////////////////////////////////////
 
-// list company information
+{ 	// list company information
 
-echo '<center>';
-$ID = $_GET["ID"];
-
-
-$sql = "SELECT  * FROM tCompany WHERE ID=".$ID.";" ;
-$result = $conn->query($sql);
-
-
-if ($result->num_rows > 0) {
-	
-	 $row = $result->fetch_assoc() ;
-	 
-	
-    echo "<h2>".$row["preName"]." ".$row["Name"]."</h2>";
-    echo "".$row["RegType"]."<br>";
-    echo "".$row["StreetA"]." ".$row["StreetB"]." ".$row["StreetC"]."<br>";
-    echo "".$row["City"]." ".$row["Region"]."<br>";
-	 echo "".$row["Postcode"]." ".$row["Country"]."<hr>";
+	echo '<center>';
+	$ID = $_GET["ID"];
 	
 	
-} else {
-    echo "0 results";
+	$sql = "SELECT  * FROM tCompany WHERE ID=".$ID.";" ;
+	$result = pg_query($conn, $sql);
+	
+	
+	if ($result) {
+		
+		 $row = pg_fetch_assoc($result) ;
+		 
+		
+	    echo "<h2>".$row["prename"]." ".$row["name"]."</h2>";
+	    echo "".$row["regtype"]."<br>";
+	    echo "".$row["streeta"]." ".$row["streetb"]." ".$row["streetc"]."<br>";
+	    echo "".$row["city"]." ".$row["region"]."<br>";
+		 echo "".$row["postcode"]." ".$row["country"]."<hr>";
+		
+		
+	} else {
+	    echo "0 results";
+	}
+
 }
+
 
 echo '</center>';
 
 /////////////////////////////////////////////////////
 
-// list company personnel
-
-
-$sql = "SELECT * FROM tPerson WHERE CompanyID=".$ID.";";
-$result = $conn->query($sql);
-
-
-if ($result->num_rows > 0) {
+{	// list company personnel
 	
-	echo '
-		<div class="container">
-		  <h4>Basic List Group</h4>
-		  <ul class="list-group">
-	';
+	$sql = "SELECT * FROM tperson WHERE companyid = '".$ID."';";
+	$result = pg_query($conn, $sql);
+	
+	
+	if ($result) {
+		
+		echo '
+			<div class="container">
+			  <h4>Basic List Group</h4>
+			  <ul class="list-group">
+		';
+	
+	    // output data of each row
+	    while($row = pg_fetch_assoc($result)) {
+	        echo "<a href='editPerson.php?ID=".$row["id"]."'>
+	        		<li class='list-group-item'>".$row["salutation"]." ".
+	        		$row["firstname"]." ".$row["lastname"]." </li></a> ";
+	        
+	    }
+	    
+		echo '    
+			  </ul>
+			</div>
+		';    
+	    
+	    
+	} else {
+	    echo "0 results";
+	}
 
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "<a href='editPerson.php?ID=".$row["ID"]."'><li class='list-group-item'>".$row["Salutation"]." ".
-        		$row["FirstName"]." ".$row["LastName"]." </li></a> ";
-    }
-    
-    
-	echo '    
-		  </ul>
-		</div>
-	';    
-    
-    
-} else {
-    echo "0 results";
+
 }
 
 
-$conn->close();
+pg_close($conn);
 
 
 
@@ -129,8 +143,7 @@ echo'
 		<div class="container">
 		 
 		<form action="createPerson.php?CompanyID='.$ID.'" name="addPersonForm" method="post">
-		
-		
+			
 		  <button type="submit" class="btn btn-primary">Add a new Person</button>
 		</form>
 		

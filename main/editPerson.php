@@ -39,44 +39,46 @@
 
 <?php
 
-///////////////////////////////////////////
-{		// connect to database 
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$databaseName = "alphaCRM";
-	
-	// Create connection
-	$conn = new mysqli($servername, $username, $password, $databaseName);
+
+
+	$conn = pg_connect("$host $port $creds $dbname");
 	
 	// Check connection
-	if ($conn->connect_error) {
-	    die("<br> Connection failed: " . $conn->connect_error);
-	} 
-	echo "<br> Connected successfully";
-
-
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
 }
+
+
+
 
 
 ////////////////////////////////////////
 
 { // select the person's details 
 
-$ID = $_GET["ID"];
-
-
-$sql = "SELECT * FROM tPerson WHERE ID=$ID ;";
-$result = $conn->query($sql);
-$row = $result->fetch_assoc();
-
-$Salutation= $row["Salutation"];
-$FirstName=  $row["FirstName"];
-$LastName=  $row["LastName"];
-$CompanyID= $row["CompanyID"];
-$Tel= $row["Tel"];
-$email= $row["email"];
+	$ID = $_GET["ID"];
+	
+	
+	$sql = "SELECT * FROM tPerson WHERE ID=$ID ;";
+	$result = pg_query($conn, $sql);
+	$row = pg_fetch_assoc($result);
+	
+	$Salutation= $row["salutation"];
+	$FirstName=  $row["firstname"];
+	$LastName=  $row["lastname"];
+	$CompanyID= $row["companyid"];
+	$Tel= $row["tel"];
+	$email= $row["email"];
 
 }
 
@@ -105,10 +107,10 @@ echo'
 		
 				$sql = "SELECT * FROM tLookup WHERE lookupType='Salutation'
 							ORDER BY lookupOrder ; ";
-				$result = $conn->query($sql);
+				$result = pg_query($conn, $sql);
 				
 				
-				if ($result->num_rows > 0) {
+				if ($result) {
 				
 				
 					echo'
@@ -119,14 +121,14 @@ echo'
 							';			  
 						  
 						  
-						  	while($row = $result->fetch_assoc()) {
-						        echo '<option value='.$row["lookupValue"];
+						  	while($row = pg_fetch_assoc($result)) {
+						        echo '<option value='.$row["lookupvalue"];
 						        
-						        		if($row["lookupValue"] == $Salutation) {
+						        		if($row["lookupvalue"] == $Salutation) {
 						        			echo ' selected ';
 						        		}
 						        
-						        echo '>'.$row["lookupValue"].'</option>
+						        echo '>'.$row["lookupvalue"].'</option>
 						        ';
 						    }
 			
@@ -177,12 +179,12 @@ echo'
 {  	// this is the dropdown for the salutation
 		
 		
-				$sql = "SELECT  `ID` , `preName` , `Name` FROM tCompany 
-							ORDER BY `Name` ASC ; ";
-				$result = $conn->query($sql);
+				$sql = "SELECT  ID , preName , Name FROM tCompany 
+							ORDER BY Name ASC ; ";
+				$result = pg_query($conn, $sql);
 				
 				
-				if ($result->num_rows > 0) {
+				if ($result) {
 				
 				
 					echo'
@@ -193,14 +195,14 @@ echo'
 							';			  
 						  
 						  
-						  	while($row = $result->fetch_assoc()) {
+						  	while($row = pg_fetch_assoc($result)) {
 						        echo '<option value='.$row["ID"];
 						        
-						        		if($row["ID"] == $CompanyID) {
+						        		if($row["id"] == $CompanyID) {
 						        			echo ' selected ';
 						        		}
 						        
-						        echo '>'.$row["preName"]." ".$row["Name"].'</option>
+						        echo '>'.$row["prename"]." ".$row["name"].'</option>
 						        ';
 						    }
 			
@@ -239,7 +241,7 @@ echo'
 
 
 
-$conn->close();
+pg_close($conn);
 ?>
 
 

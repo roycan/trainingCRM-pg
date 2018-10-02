@@ -3,7 +3,7 @@
 
 *	File:			tPersonInitialise.php
 *	By:			TMIT  ,  Roy Canseco
-*	Date:		
+*	Date:			02 Oct 2018
 *
 *	This script initialises the tPerson TABLE
 *
@@ -13,20 +13,25 @@
 
 
 
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
+
 
 
 
@@ -44,19 +49,12 @@ echo "<br> Connected successfully";
 		);
 		$numFields = sizeof($tableField);
 			
-		$createTable_SQL =  "CREATE TABLE alphacrm.".$tableName." (
-									ID INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY , 
-									Salutation VARCHAR( 20 ) , 
-									FirstName VARCHAR( 50 ) , 
-									LastName VARCHAR( 50 ) NOT NULL, 
-									CompanyID INT ( 11 ) NOT NULL 
-		)";
+		
 
-
-	//	=======^^^^^^^^^^^^^^^^^^^^^^^=========  End of Definition Part ======^^^^^^^^^=====
+	//	=======^^^^^^^^^^^^^^^^^^^^^^^===========^^^^^^^^^=====
 
 										
-		{  //		read CSV data file
+	{  //		read CSV data file
 	
 			$file = fopen($CSVfilename, "r"); 		
 			$i = 0;
@@ -69,33 +67,52 @@ echo "<br> Connected successfully";
 			fclose($file);
 			
 			$numRows = sizeof($tableData);
-		}
-		echo '$numRows : '.$numRows.'<br />';
+	}
+		
+		
+		echo '$ <br> numRows : '.$numRows.'<br />';
 		echo '$tableField[$numFields-1] : '.$tableField[$numFields-1].'<br />';
+		
 
-		{	//		DROP table		
+	{	//		DROP table		
 	
 		
 			$drop_SQL = "DROP TABLE ".$tableName;
 			
-			if (mysqli_query($conn, $drop_SQL))  {	
+			if (pg_query($conn, $drop_SQL))  {	
 				echo "'DROP ".$tableName."' -  Successful.";
 			} else {
 				echo "'DROP ".$tableName."' - Failed.";
 			}
-		}
+	}
 		
 		echo "<br /><hr /><br />";
+		
 	
-		{	//		CREATE table		
-			
-			if (mysqli_query($conn, $createTable_SQL))  {	
+	{	//		CREATE table
+		
+			$createTable_SQL =  "CREATE TABLE ".$tableName." (
+						id SERIAL NOT NULL PRIMARY KEY , 
+						salutation VARCHAR( 20 ) , 
+						firstname VARCHAR( 50 ) , 
+						lastname VARCHAR( 50 ) NOT NULL, 
+						companyid VARCHAR( 11 ) NOT NULL 
+			)";
+		
+		
+		
+			if (pg_query($conn, $createTable_SQL))  {	
 				echo "'CREATE ".$tableName."' -  Successful.";
 			} else {
 				echo "'CREATE ".$tableName."' - Failed.";
 			}
-		}		
+	}		
+	
+	
 		echo "<br /><hr /><br />";
+		
+		
+	{	// Insert csv data into the table
 			
 			$table_SQLinsert = "INSERT INTO ".$tableName." (";
 			
@@ -114,7 +131,7 @@ echo "<br> Connected successfully";
 				
 				foreach($tableField as $key => $tableFieldName) {
 					
-					$table_SQLinsert .=  "'".$tableData[$indx][$key]."'";
+					$table_SQLinsert .=  "'".trim($tableData[$indx][$key])."'";
 					if($tableFieldName <> $tableField[$numFields-1]) {
 						$table_SQLinsert .=  ", ";
 					}
@@ -129,17 +146,19 @@ echo "<br> Connected successfully";
 				$indx++;
 			}
 		
-			{	//	Echo and Execute the SQL and test for success   
+	}
+		
+		{	//	Echo and Execute the SQL and test for success   
 			
 						echo "<strong><u>SQL:<br /></u></strong>";
 						echo $table_SQLinsert."<br /><br />";
 							
-						if (mysqli_query($conn, $table_SQLinsert))  {				
+						if (pg_query($conn, $table_SQLinsert))  {				
 							echo "was SUCCESSFUL.<br /><br />";
 						} else {
 							echo "FAILED.<br /><br />";		
 						}
-			}
+		}
 }
 
 
@@ -147,9 +166,5 @@ echo "<br> Connected successfully";
 
 
 
-
-$conn->close();
-
-
-
+pg_close($conn);
 ?>

@@ -8,7 +8,7 @@
 
 *	File:			savePerson.php
 *	By:			Roy Canseco
-*	Date:			28 Sep 2018	
+*	Date:			02 Oct 2018	
 *
 *	This script saves the data from createPerson.php 
 		to the tPerson table of alphaCRM
@@ -34,21 +34,28 @@
 
 <body>
 
+
+
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
 
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
 
 
 	$Salutation = $_POST["Salutation"];
@@ -58,24 +65,27 @@ echo "<br> Connected successfully";
 	$CompanyID = $_POST["CompanyID"];
 	$email = $_POST["email"];
 
-// sql insert into table
-// you can get an exact template for this from phpmyadmin
-$sql = "INSERT INTO `tperson` (`Salutation`, `FirstName`, `LastName`, `Tel`, `CompanyID` , `email`) 
-			VALUES ('$Salutation', '$FirstName', '$LastName', '$Tel', '$CompanyID' , '$email');";
 
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Data for Table tPerson inserted successfully";
-} else {
-    echo "<br> Error inserting to table: " . $conn->error;
+
+
+{	// sql insert into table
+		$sql = "INSERT INTO tperson (salutation, FirstName, LastName, tel, CompanyID , email) 
+					VALUES ('$Salutation', '$FirstName', '$LastName', '$Tel', '$CompanyID' , '$email');";
+		
+		if (pg_query($conn, $sql) == TRUE) {
+		    echo "<br> Data for Table tPerson inserted successfully";
+		} else {
+		    echo "<br> Error inserting to table: " . pg_last_error($conn);
+		}
+
 }
+
 
 echo '<br>'.$sql;
 
 
-$conn->close();
 
-
-
+pg_close($conn);
 ?>
 
 

@@ -36,19 +36,25 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
 
 
 
@@ -66,45 +72,40 @@ echo "<br> Connected successfully";
 	
 
 
+{	// update the database with the new data	
+	$sql = "
+	
+			UPDATE tcompany SET preName='$preName', Name='$Name',
+				RegType='$RegType', StreetA='$StreetA',StreetB='$StreetB',
+				StreetC='$StreetC',City='$City',Region='$Region',
+				Postcode='$Postcode',
+				Country='$Country' WHERE ID= '$ID' ;
+	";
 
-$sql = "
+	
+	if (pg_query($sql) == TRUE) {
+	    echo "<br> Record in table tCompany updated successfully";
+	} else {
+	    echo "<br> Error updating record: " . pg_last_error($conn);
+	}
 
-		UPDATE `tcompany` SET `preName`='$preName',`Name`='$Name',
-			`RegType`='$RegType',`StreetA`='$StreetA',`StreetB`='$StreetB',
-			`StreetC`='$StreetC',`City`='$City',`Region`='$Region',
-			`Postcode`='$Postcode',
-			`Country`='$Country' WHERE ID= '$ID' ;
-
-";
-
-
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Record in table tCompany updated successfully";
-} else {
-    echo "<br> Error updating record: " . $conn->error;
+	/*
+	UPDATE <tableName> SET
+		fieldA = 'valueA' ,
+		fieldB = 'valueB' ,
+		fieldC = 'valueC' 
+	WHERE 
+		fieldX <operator> 'valueX'
+		
+		
+	// operator can  = or < or >	
+	*/
 }
 
-/*
-UPDATE <tableName> SET
-	fieldA = 'valueA' ,
-	fieldB = 'valueB' ,
-	fieldC = 'valueC' 
-WHERE 
-	fieldX <operator> 'valueX'
-	
-	
-// operator can  = or < or >	
-*/
 
-
-
-
-
-$conn->close();
-
-
-
+pg_close($conn);
 ?>
+
 
 <br><hr><br>
 

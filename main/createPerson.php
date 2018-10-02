@@ -2,6 +2,7 @@
 <html>
 
 <head>
+<title>createPerson.php</title>
 
 <script>
 /*
@@ -45,24 +46,23 @@
 
 <?php
 
-{  //  connect to database 
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-		
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$databaseName = "alphaCRM";
-		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $databaseName);
-		
-		// Check connection
-		if ($conn->connect_error) {
-		    die("<br> Connection failed: " . $conn->connect_error);
-		} 
-		echo "<br> Connected successfully";
-		
 
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
 }
 
 
@@ -74,10 +74,10 @@
 		
 	$sql = "SELECT * FROM tLookup WHERE lookupType='Salutation'
 				ORDER BY lookupOrder ; ";
-	$result = $conn->query($sql);
+	$result = pg_query($conn, $sql);
 	
 	
-	if ($result->num_rows > 0) {
+	if ($result) {
 	
 	
 		echo'
@@ -88,10 +88,10 @@
 				';			  
 			  
 			  
-			  	while($row = $result->fetch_assoc()) {
-			        echo '<option value='.$row["lookupValue"];
+			  	while($row = pg_fetch_assoc($result)) {
+			        echo '<option value='.$row["lookupvalue"];
 
-			        echo '>'.$row["lookupValue"].'</option>
+			        echo '>'.$row["lookupvalue"].'</option>
 			        ';
 			    }
 
@@ -109,7 +109,9 @@
 
 
 }	
-$conn->close();
+
+
+ pg_close($conn);
 ?>
   
   
