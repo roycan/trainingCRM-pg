@@ -96,7 +96,7 @@
 						salutation VARCHAR( 20 ) , 
 						firstname VARCHAR( 50 ) , 
 						lastname VARCHAR( 50 ) NOT NULL, 
-						companyid VARCHAR( 11 ) NOT NULL 
+						companyid int NULL 
 			)";
 		
 		
