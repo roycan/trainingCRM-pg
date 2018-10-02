@@ -69,11 +69,11 @@
 	
 	$sql = "SELECT ID, preName, Name FROM tCompany
 				ORDER BY Name";
-	$result = $conn->query($sql);
+	$result = pg_query($conn, $sql);
 	
 
 	
-	if ($result->num_rows > 0) {
+	if ($result) {
 	
 		echo'
 			<div class="container">
@@ -84,9 +84,9 @@
 	    
 	    // output data of each row
 	    $i = 1;
-	    while($row = $result->fetch_assoc()) {
-	        echo '<li class="list-group-item">'.$i.' <a href="listPeople.php?ID='.$row["ID"].'"
-	        	  >'.$row["preName"].' '.$row["Name"].'</a></li>';
+	    while($row = pg_fetch_assoc($result)) {
+	        echo '<li class="list-group-item">'.$i.' <a href="listPeople.php?ID='.$row["id"].'"
+	        	  >'.$row["prename"].' '.$row["name"].'</a></li>';
 				$i++;	    
 	    }
 	    echo "
@@ -94,8 +94,6 @@
 			</div>   
 	   ";
 	    
-	
-	
 	
 	    
 	} else {
@@ -109,12 +107,11 @@
 	
 	';
 
-
 }
 
 
 
-$conn->close();
+pg_close($conn);
 ?>
 
 	

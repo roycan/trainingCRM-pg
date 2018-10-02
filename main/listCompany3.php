@@ -41,43 +41,45 @@
 
 
 <?php
-{  //  connect to database 
 
-		
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$databaseName = "alphaCRM";
-		
-		// Create connection
-		$conn = new mysqli($servername, $username, $password, $databaseName);
-		
-		// Check connection
-		if ($conn->connect_error) {
-		    die("<br> Connection failed: " . $conn->connect_error);
-		} 
-		echo "<br> Connected successfully";
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
+
+
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
 	
 }
+
+
+
+
 
 {  // select data from the database
 
 		
-	$sql = "SELECT `preName`, `Name` , tperson.ID, tperson.Salutation, 
+	$sql = "SELECT preName, Name , tperson.ID, tperson.salutation, 
 				tperson.FirstName, tperson.LastName, tperson.Tel , tperson.email
-				FROM `tcompany` 
+				FROM tcompany 
 				LEFT JOIN tperson ON tperson.CompanyID=tcompany.ID 
-				ORDER BY `tcompany`.`Name` ASC
+				ORDER BY tcompany.Name ASC
 	";
-	$result = $conn->query($sql);
+	$result = pg_query($conn, $sql);
 	
 	
-	if ($result->num_rows > 0) {
+	if ($result) {
 		
-		
-		
-	    echo '
-	    
+	    echo '   
 	    <script>
 			$(document).ready(function() {
 			    $("#peopleTable").DataTable();
@@ -96,39 +98,31 @@
 		                <th>Email</th>
 		            </tr>
 		        </thead>
-		        <tbody>
-	    
+		        <tbody>    
 	    ';
 	    
+	   
 	    
+	 {   // output data of each row
+	      
 	    
-	    // output data of each row
-	    
-	    
-	    
-	    
-	    while($row = $result->fetch_assoc()) {
+	    while($row = pg_fetch_assoc($result)) {
 	        echo '
 	        			<tr>
-		                <td><b>'.$row["preName"].'</b></td>
-		                <td><b>'.$row["Name"].'</b></td>
-		                <td>'.$row["Salutation"].'</td>
-		                <td>'.$row["FirstName"].'</td>
-		                <td>'.$row["LastName"].'</td>
-		                <td>'.$row["Tel"].'</td>
+		                <td><b>'.$row["prename"].'</b></td>
+		                <td><b>'.$row["name"].'</b></td>
+		                <td>'.$row["salutation"].'</td>
+		                <td>'.$row["firstname"].'</td>
+		                <td>'.$row["lastname"].'</td>
+		                <td>'.$row["tel"].'</td>
 		                <td>'.$row["email"].'</td>
 		            </tr>
-	        ';
+	        ';       
 	        
-	        
-	   }     
-	        
+	  	 }		            
+	}
 
-
-	        
-	        
-	        
-	        
+	              
 	    
 	    echo "   
 		    </tbody>
@@ -143,13 +137,8 @@
 		                <th>Email</th>
 		            </tr>
 		        </tfoot>
-		    </table>	    
-    
+		    </table>	        
 	    ";
-	    
-	    
-	    
-	    
 	    
 	    
 	    
@@ -157,15 +146,13 @@
 	    echo "0 results";
 	}
 	
-	
-
 
 }
 
 
 
 
-$conn->close();
+pg_close($conn);
 ?>
 
 

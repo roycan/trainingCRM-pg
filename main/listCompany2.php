@@ -54,133 +54,125 @@
 
 <?php
 
-{	// connection script
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-// echo "<br> Connected successfully";
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
 
-}		
-/////////////////////////////////////////////////////////////////
+
 
 
 
 { //create data table from DB results
 
-$sql = "SELECT * FROM tCompany
-			ORDER BY Name";
-$result = $conn->query($sql);
-
-
-
-
-if ($result->num_rows > 0) {
-
+	$sql = "SELECT * FROM tCompany
+				ORDER BY Name";
+	$result =  pg_query($conn, $sql);
 	
 	
-		echo'
-		<table id="companyTable" class="table table-striped table-bordered" style="width:100%">
-	        <thead>
-	            <tr>
-	            	<th>ID (edit)</th>
-	                <th>preName</th>
-	                <th>Name</th>
-	                <th>RegType	</th>
-	                <th>StreetA</th>
-	                <th>StreetB date</th>
-	                <th>StreetC</th>
-	                <th>City	</th>
-	                <th>Region</th>
-	                <th>Postcode date</th>
-	                <th>Country</th>
-	                <th>People</th>
-	            
-	            </tr>
-	        </thead>
-	        <tbody>
-		';        
-	        
-	     
-	    {	// output data of each row
-	    $i = 1;
-	    while($row = $result->fetch_assoc()) {
-	        echo '	
-	  				<tr>
-	        			<td> <a href="editCompanyForm.php?ID='.$row["ID"].'" >'.$i.'</a></td>
-	               <td>'.$row["preName"].'</td>
-	               <td>'.$row["Name"].'</td>
-	               <td>'.$row["RegType"].'</td>
-	               <td>'.$row["StreetA"].'</td>
-	               <td>'.$row["StreetB"].'</td>
-	               <td>'.$row["StreetC"].'</td>
-	               <td>'.$row["City"].'</td>
-	               <td>'.$row["Region"].'</td>
-	               <td>'.$row["Postcode"].'</td>
-	               <td>'.$row["Country"].'</td>
-	               <td><a href="listPeople.php?ID='.$row["ID"].'" > link </a> </td>
-	            </tr>
-	        ';
-	        	  
-	        	  
-				$i++;	    
-	    }        
 	
+	if ($result) {
+	
+		
+			echo'
+			<table id="companyTable" class="table table-striped table-bordered" style="width:100%">
+		        <thead>
+		            <tr>
+		            	<th>ID (edit)</th>
+		                <th>preName</th>
+		                <th>Name</th>
+		                <th>RegType	</th>
+		                <th>StreetA</th>
+		                <th>StreetB date</th>
+		                <th>StreetC</th>
+		                <th>City	</th>
+		                <th>Region</th>
+		                <th>Postcode date</th>
+		                <th>Country</th>
+		                <th>People</th>
+		            
+		            </tr>
+		        </thead>
+		        <tbody>
+			';        
+		        
+		     
+		{	// output data of each row
+		    $i = 1;
+		    while($row = pg_fetch_assoc($result)) {
+		        echo '	
+		  				<tr>
+		        			<td> <a href="editCompanyForm.php?ID='.$row["id"].'" >'.$i.'</a></td>
+		               <td>'.$row["prename"].'</td>
+		               <td>'.$row["name"].'</td>
+		               <td>'.$row["regtype"].'</td>
+		               <td>'.$row["streeta"].'</td>
+		               <td>'.$row["streetb"].'</td>
+		               <td>'.$row["streetc"].'</td>
+		               <td>'.$row["city"].'</td>
+		               <td>'.$row["region"].'</td>
+		               <td>'.$row["postcode"].'</td>
+		               <td>'.$row["country"].'</td>
+		               <td><a href="listPeople.php?ID='.$row["id"].'" > link </a> </td>
+		            </tr>
+		        ';		        	  
+		        	  
+					$i++;	    
+		    }        		
 		}  
-	   
-	 	echo'       
-	        </tbody>
-	        <tfoot>
-	            <tr>   
-	            	<th>ID (edit)</th>
-	                <th>preName</th>
-	                <th>Name</th>
-	                <th>RegType	</th>
-	                <th>StreetA</th>
-	                <th>StreetB </th>
-	                <th>StreetC</th>
-	                <th>City	</th>
-	                <th>Region</th>
-	                <th>Postcode date</th>
-	                <th>Country</th>
-	                <th>People</th>
-	            </tr>
-	        </tfoot>
-	    </table>
-
-		';
-
-
-    
-} else {
-    echo "0 results";
-}
-
-
+		   
+		 	echo'       
+		        </tbody>
+		        <tfoot>
+		            <tr>   
+		            	<th>ID (edit)</th>
+		                <th>preName</th>
+		                <th>Name</th>
+		                <th>RegType	</th>
+		                <th>StreetA</th>
+		                <th>StreetB </th>
+		                <th>StreetC</th>
+		                <th>City	</th>
+		                <th>Region</th>
+		                <th>Postcode date</th>
+		                <th>Country</th>
+		                <th>People</th>
+		            </tr>
+		        </tfoot>
+		    </table>
+	
+			';
+	
+	    
+	} else {
+	    echo "0 results";
+	}
+	
 
 }
 
 
 
-$conn->close();
+pg_close($conn);
 ?>
 
 	
 	
 </div>
-
-
-
-
 
 
 
