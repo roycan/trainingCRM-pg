@@ -4,11 +4,12 @@
    $host        = "host=localhost ";
    $port        = "port = 5432";
    $creds 		 = "user=postgres password=pass";
+   $dbname		 = "dbname = alphacrm";
 
 
 
 
-	$conn = pg_connect("$host $port $creds ");
+	$conn = pg_connect("$host $port $creds $dbname");
 	
 	// Check connection
 	if ( !($conn) ) {
@@ -21,15 +22,14 @@
 
 	
 
-	// sql to drop a database
-	$sql = "DROP DATABASE alphacrm;";
+	// sql to drop a table
+	$sql = "DROP TABLE t_persons;";
 	
 	if ( pg_query($conn, $sql) ) {
-	    echo "<br> Database alphacrm dropped successfully";
+	    echo "<br> Table t_persons dropped successfully";
 	} else {
-	    echo "<br> Error dropping database: ".pg_last_error($conn);
+	    echo "<br> Error dropping table: ".pg_last_error($conn);
 	}
-
 
 
 

@@ -13,37 +13,47 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
 
-// sql to delete a record
-$sql = "DELETE FROM companyTable WHERE id=33";
-
-if ($conn->query($sql) === TRUE) {
-    echo "<br>  Table companyTable record(s) deleted successfully";
-} else {
-    echo "<br> Error deleting record: " . $conn->error;
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
 }
 
 
 
 
 
-$conn->close();
+	
+	
+{	// sql to delete a record
+	$sql = "DELETE FROM t_companies WHERE id=1";
+			
+	if (pg_query($conn , $sql)) {
+	    echo "<br>  Corresponding record(s) from table t_companies deleted successfully";
+	} else {
+	    echo "<br> Error deleting record: " . pg_last_error($conn);
+	}
+
+}
 
 
 
+
+
+pg_close($conn);
 ?>
+

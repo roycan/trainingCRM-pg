@@ -13,41 +13,51 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
 
-    
-$sql = "ALTER TABLE tPerson MODIFY Tel VARCHAR(20);  ";
-
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Table tPerson altered successfully";
-} else {
-    echo "<br> Error updating record: " . $conn->error;
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
 }
 
-/*
-ALTER TABLE tPerson DROP Tel ;
+
+
+
+
+{	// Alter a table    
+	$sql = "ALTER TABLE  t_persons ADD email VARCHAR(20);  ";
 	
-// ALTER TABLE table_name ADD column_name datatype;
-// ALTER TABLE table_name MODIFY COLUMN column_name datatype;
-*/
+	if ( pg_query($conn, $sql) == true ) {
+	    echo "<br> Table t_persons altered successfully";
+	} else {
+	    echo "<br> Error updating record: " . pg_last_error($conn);
+	}
+		
+	/*
+	ALTER TABLE tPerson DROP Tel ;
+		
+	// ALTER TABLE table_name DROP COLUMN column_name;
+	// ALTER TABLE table_name ADD column_name datatype;
+	// ALTER TABLE table_name MODIFY COLUMN column_name datatype;
+	// ALTER TABLE table_name ALTER COLUMN column_name TYPE datatype;
+	// ALTER TABLE table_name MODIFY column_name datatype NOT NULL;
+	*/
+
+}
 
 
-$conn->close();
-
-
-
+pg_close($conn);
 ?>

@@ -13,49 +13,54 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
-$sql = "UPDATE companyTable SET country='United Kingdom' WHERE country='UK'";
 
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Record in table companyTable updated successfully";
-} else {
-    echo "<br> Error updating record: " . $conn->error;
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
 }
 
-/*
-UPDATE <tableName> SET
-	fieldA = 'valueA' ,
-	fieldB = 'valueB' ,
-	fieldC = 'valueC' 
-WHERE 
-	fieldX <operator> 'valueX'
+
+
+
+{	// update entries in a table
+	$sql = "UPDATE t_companies SET country='United Kingdom' WHERE country='UK'";
 	
-	
-// operator can  = or < or >	
-*/
+	if ( pg_query($conn, $sql) == true ) {
+	    echo "<br> Corresponding record(s) in table t_companies updated successfully";
+	} else {
+	    echo "<br> Error updating record: " . pg_last_error($conn);
+	}
+		
+	/*
+	UPDATE <tableName> SET
+		fieldA = 'valueA' ,
+		fieldB = 'valueB' ,
+		fieldC = 'valueC' 
+	WHERE 
+		fieldX <operator> 'valueX'
+		
+		
+	// operator can  = or < or >	
+	*/
+
+}
 
 
 
 
-
-
-
-$conn->close();
-
-
-
+pg_close($conn);
 ?>

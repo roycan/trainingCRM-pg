@@ -14,50 +14,51 @@
 
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
-
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
 
 
-
-
-// sql insert into table
-// you can get an exact template for this from phpmyadmin
-$sql = "INSERT INTO companyTable (`preName`, `Name`, `regType`, `StreetA`, 
-				`StreetB`, `StreetC`, `City`, `Region`, `Postcode`, `Country`) 
-			VALUES ('The' ,  'Pie Company' , '' , '89 Gravy Road' , '' , '' ,
-					'Pastryville' , 'NSW' , '1297' , 'Australia'),
-				('The' , 'Roy Company' , '' , '' , '' , '' , '' , 'Metro Manila',
-				'' , 'Philippines') ,
-				('' , 'TMIT World' , 'Limited' , '44 Lily Close' , '' , '' , 
-				'Bicester' , 'Oxfordshire' , 'OX26 3EJ' , 'UK') 
-				;";
-
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Data for Table companyTable inserted successfully";
-} else {
-    echo "<br> Error inserting to table: " . $conn->error;
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
 }
 
 
 
 
+	// sql insert into table
+	$sql = "INSERT INTO t_companies (preName, Name, regType, StreetA, 
+					StreetB, StreetC, City, Region, Postcode, Country) 
+				VALUES ('The' ,  'Pie Company' , '' , '89 Gravy Road' , '' , '' ,
+						'Pastryville' , 'NSW' , '1297' , 'Australia'),
+					('The' , 'Roy Company' , '' , '' , '' , '' , '' , 'Metro Manila',
+					'' , 'Philippines') ,
+					('' , 'TMIT World' , 'Limited' , '44 Lily Close' , '' , '' , 
+					'Bicester' , 'Oxfordshire' , 'OX26 3EJ' , 'UK') 
+					;";
+
+	if (pg_query($conn , $sql)) {
+	    echo "<br> Data for Table t_company inserted successfully";
+	} else {
+	    echo "<br> Error inserting to table: " . pg_last_error($conn);
+	}
 
 
 
-$conn->close();
+	
 
 
 
+pg_close($conn);
 ?>

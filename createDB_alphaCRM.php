@@ -15,36 +15,36 @@
 <?php
 
 {	// Create connection
-   $host        = "host=localhost ";
+   $host        = "host=localhost";
    $port        = "port = 5432";
-   $creds 		 = "user=postgres password=pas";
+   $creds 		 = "user=postgres password=pass";
+
+	
+	$conn = pg_connect("$host $port $creds");
+	
+	// Check connection
+	if ( pg_connection_status($conn) ) {
+	    die("<br>  Connection failed: " . pg_last_error($conn) );
+	} else {
+		echo "<br>  Connected successfully";
+		}
+	}
 
 
-$conn = pg_connect("$host $port $creds");
-
-// Check connection
-if ( pg_connection_status($conn) ) {
-    die("<br>  Connection failed: " . pg_last_error($conn) );
-} 
-echo "<br>  Connected successfully";
-
-}
-
-
-$databaseName = "alphaCRM";
-
-
-// Create database
-
-$sql = "CREATE DATABASE $databaseName ;";
-
-
-if (pg_query($conn , $sql) === TRUE) {
-    echo "<br> Database alphaCRM created successfully";
-} else {
-    echo "<br> Error creating database $databaseName . <br>".pg_last_error($conn) ;
-}
-
+	$dbname = "alphaCRM";
+	
+	
+	// Create database
+	
+	$sql = "CREATE DATABASE $dbname ;";
+	
+	
+	if (pg_query($conn , $sql) ) {
+	    echo "<br> Database $dbname created successfully";
+	} else {
+	    echo "<br> Error creating database $dbname . <br>".pg_last_error($conn) ;
+	}
+	
 
 
 
@@ -52,8 +52,3 @@ if (pg_query($conn , $sql) === TRUE) {
 pg_close($conn);
 ?>
 
-
-
-
-
- 

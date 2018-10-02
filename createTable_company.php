@@ -1,26 +1,32 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$databaseName = "alphaCRM";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $databaseName);
+{	// Create connection
+   $host        = "host=localhost ";
+   $port        = "port = 5432";
+   $creds 		 = "user=postgres password=pass";
+   $dbname 		 = "dbname = alphacrm";
 
-// Check connection
-if ($conn->connect_error) {
-    die("<br> Connection failed: " . $conn->connect_error);
-} 
-echo "<br> Connected successfully";
+
+
+	$conn = pg_connect("$host $port $creds $dbname");
+	
+	// Check connection
+	if ( !($conn) ) {
+	    die("<br>  Connection failed " );
+	} else {
+		echo "<br>  Connected successfully";
+	}
+	
+}
 
 
 // sql to create table
-$sql = "CREATE TABLE companyTable (
-	id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+$sql = "CREATE TABLE t_companies (
+	ID SERIAL NOT NULL  PRIMARY KEY, 
 	preName VARCHAR(50) ,
 	Name VARCHAR(250) NOT NULL,
 	regType VARCHAR(50) NULL,
-	reg_date TIMESTAMP,
+	reg_date TIMESTAMP DEFAULT NOW(),
 	StreetA VARCHAR(150) NULL, 
 	StreetB VARCHAR(150) NULL ,
 	StreetC VARCHAR(150) NULL , 
@@ -31,16 +37,16 @@ $sql = "CREATE TABLE companyTable (
 );";
 
 
-if ($conn->query($sql) === TRUE) {
-    echo "<br> Table companyTable created successfully";
-} else {
-    echo "<br> Error creating table: " . $conn->error;
-}
+	if (pg_query($conn, $sql) ) {
+	    echo "<br> Table t_companies created successfully";
+	} else {
+	    echo "<br> Error creating table: " . pg_last_error($conn);
+	}
 
 
 /*
-CREATE TABLE <databaseName>.<tableName>(
-<fieldName> type (len) {NOT} NULL {AUTO_INCREMENT} PRIMARY KEY,
+CREATE TABLE {<databaseName>.}<tableName>(
+<fieldName> type (len) {NOT} NULL  PRIMARY KEY,
 <fieldName> type (len) {NOT} NULL ,
 <fieldName> type (len) {NOT} NULL ,
 ...
@@ -55,8 +61,9 @@ CREATE TABLE <databaseName>.<tableName>(
 
 
 
-$conn->close();
-
-
-
+pg_close($conn);
 ?>
+
+
+
+
